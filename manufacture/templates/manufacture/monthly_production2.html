@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+   <style>
+      .button {
+      background-color: #66FF99;
+      border: none;
+      color: black;
+      padding: 20px 34px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 15px;
+      margin: 4px 2px;
+      cursor: pointer;
+      }
+    </style>
+ <div id="page-wrapper">
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-head-line">Выработка за период с {{q1}} по {{q2}}</h1>
+
+					</div>
+
+					{% regroup quantities by date as quantities_list %}
+					<ul>
+						{% for date in quantities_list %}
+							<li>{{ date.grouper }}
+								<ul>
+
+									{% for item in date.list %}
+										<li>{{ item.catalogue__model }} {{item.catalogue__code}} {{ item.catalogue__color }} - {{item.quantity}}</li>
+									{% endfor %}
+									Общее количество: {{total_quantity}}</ul>
+								</ul>
+
+							<ul>
+
+							</li>
+
+						{% endfor %}
+					</ul>
+				</div> # 1
+			</div> # 2
+ </div> # 3
+<!--	<section class="ftco-section">-->
+<!--		<div class="container">-->
+<!--			<div class="row">-->
+<!--				<div class="col-md-15">-->
+<!--					<div class="table-wrap">-->
+<!--						<table class="table table-striped">-->
+<!--						 <thead>-->
+
+
+<!--								<th >Название</th>-->
+<!--								{% for d in quantities %}-->
+
+<!--								<th >{{ d.catalogue }}</th>-->
+<!--						  		{% endfor %}-->
+
+<!--						  </thead>-->
+
+
+<!--							<tbody>-->
+<!--										{% for i in quantities %}-->
+
+<!--											<tr>-->
+<!--											<th >{{ i.date  }}</th>-->
+<!--												{% for j in i. %}-->
+<!--													<th >{{ j  }}</th>-->
+<!--												{% endfor %}-->
+<!--										{% endfor %}-->
+
+<!--							</tbody>-->
+
+<!--						  </tbody>-->
+<!--						</table>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</section>-->
+
+<!--				</div>-->
+<!--		</div>-->
+<!--	</html>-->
+<!--	</div>-->
+{% endblock %}

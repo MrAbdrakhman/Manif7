@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+   <style>
+      .button {
+      background-color: #66FF99;
+      border: none;
+      color: black;
+      padding: 20px 34px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 15px;
+      margin: 4px 2px;
+      cursor: pointer;
+      }
+    </style>
+ <div id="page-wrapper">
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-head-line">Начисление заработной платы по станку ПУ с {{q1}} по {{q2}}</h1>
+
+					</div>
+
+	<body>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-15">
+					<div class="table-wrap">
+						<table class="table table-striped">
+						 <thead>
+						    <tr>
+								<th >ID</th>
+								<th >Дата</th>
+								{% for d in quantities %}
+								<th >{{ d.date }}</th>
+						  		{% endfor %}
+
+							</tr>
+						  </thead>
+								 <thead>
+									<tr>
+										<th >ID</th>
+										<th >Выработано</th>
+										{% for d in quantities %}
+
+											<th >{{ d.quantity }}</th>
+
+
+
+									  {% endfor %}
+						   			 </tr>
+						 		 </thead>
+								<thead>
+									<tr>
+										<th >ID</th>
+										<th >Количество рабочих</th>
+										{% for d in quantities %}
+
+											<th >{{ d.timesheet.emp_sum }}</th>
+
+
+
+									  {% endfor %}
+						   			 </tr>
+						 		 </thead>
+								 <thead>
+									<tr>
+										<th >ID</th>
+										<th >Выработано сумма</th>
+										{% for d in quantities %}
+
+											<th >{{ d.sum_q }}</th>
+
+									  {% endfor %}
+						   			 </tr>
+						 		 </thead>
+								 <thead>
+									<tr>
+										<th >ID</th>
+										<th >Количество брака</th>
+										{% for d in quantities %}
+
+											<th >{{ d.defect_q }}</th>
+
+									  {% endfor %}
+						   			 </tr>
+						 		 </thead>
+										<thead>
+									<tr>
+										<th >ID</th>
+										<th >Брак сумма</th>
+										{% for d in quantities %}
+
+											<th >{{ d.defect_sum }}</th>
+
+										{% endfor %}
+
+						   			 </tr>
+
+									</thead>
+
+									<thead>
+										<tr>
+											<th >ID</th>
+											  <th>ИТОГО за день сотрудников</th>
+									  			{% for d in quantities %}
+
+											<th >{{ d.emp_count  }} </th>
+
+												{% endfor %}
+
+										</tr>
+						 		 </thead>
+
+
+							<tbody>
+
+										{% for i in emp %}
+											<tr>
+											<th >{{ i.id  }}</th>
+											<th >{{ i.fio  }}</th>
+										    {% for d in quantities %}
+
+											<th >{{ d.quantity  }} </th>
+												{% endfor %}
+											</tr>
+										{% endfor %}
+											<tr>
+
+
+
+											</tr>
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+				</div>
+		</div>
+	</html>
+	</div>
+{% endblock %}

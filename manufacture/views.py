@@ -292,15 +292,15 @@ def view_monthly_production(request):
     return render(request, 'manufacture/monthly_productions.html', {'error': error})
 
 
-catalogs = Catalogue.objects.all().values('model', 'code')
-dct = {}
-for catalog in catalogs:
-    if catalog['model'] not in dct:
-        dct[catalog['model']] = 1
-    else:
-        dct[catalog['model']] += 1
-
-print(dct, catalogs)
+# catalogs = Catalogue.objects.all().values('model', 'code')
+# dct = {}
+# for catalog in catalogs:
+#     if catalog['model'] not in dct:
+#         dct[catalog['model']] = 1
+#     else:
+#         dct[catalog['model']] += 1
+#
+# print(dct, catalogs)
 
 
 # col_model = Catalogue.objects.filter(model='Бенто').count()
@@ -319,14 +319,6 @@ def search_monthly(request):
         elif not q2:
             error = True
         else:
-
-            # res = (DailyProduction.objects
-            #        .values('catalogue__color', 'catalogue__code')
-            #        .annotate(total_quantity=Sum('quantity'))
-            #        .order_by()
-            #        )
-            # print(res)
-
             quantities = (DailyProduction.objects
                           .filter(date__range=(q1, q2))
                           .values('catalogue__color',
@@ -334,16 +326,18 @@ def search_monthly(request):
                                   'catalogue__model',
                                   'date',
                                   'quantity')
-                          .annotate(total_quantity=Sum('quantity'))
-                          .order_by('date'))
-            total_day = DailyProduction.objects.filter(date__range=(q1, q2)).annotate(total_quantity=Sum('quantity'))
+                          .annotate(total=Sum('quantity')).order_by('date'))
 
-            print([(i['total_quantity']) for i in quantities])
+            total = (DailyProduction.objects
+                     .values('date')
+                     .filter(date__range=(q1, q2)).annotate(total=Sum('quantity')).order_by('date'))
+            total_range = DailyProduction.objects.filter(date__range=(q1, q2)).order_by('date').aggregate(total=Sum('quantity'))['total']
             return render(request, 'manufacture/monthly_production2.html',
                           {'quantities': quantities,
                            'q1': q1,
                            'q2': q2,
-                           'total_day': total_day
+                           'total': total,
+                           'total_range': total_range,
                            }
                           )
     return render(request, 'manufacture/search_month.html', {'error': error})

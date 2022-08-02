@@ -1,13 +1,15 @@
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
-from .models import *
 from .forms import *
 from datetime import datetime
 from django_tables2 import SingleTableView, tables, RequestConfig
 from django.db.models import Sum, Count
 import datetime
-
-
+from django.shortcuts import render
+from .models import*
+import pandas as pd
+from django_pandas.io import read_frame
+import numpy as np
 #
 # class DailyProductionTable(tables.Table):
 #     class Meta:
@@ -27,6 +29,7 @@ import datetime
 #     table_class = DailyProductionTable
 #     RequestConfig(request).configure(table)
 #     return render(request, 'manufacture/daily_production.html', {'table': table})
+
 
 
 def index(request):
@@ -340,4 +343,29 @@ def search_monthly(request):
                            'total_range': total_range,
                            }
                           )
+    return render(request, 'manufacture/search_month.html', {'error': error})
+
+
+def pandas_view(request):
+    error = False
+    if 'q1' and 'q2' in request.GET:
+        q1 = datetime.datetime.strptime(request.GET['q1'], '%Y-%m-%d')
+        q2 = datetime.datetime.strptime(request.GET['q2'], '%Y-%m-%d')
+
+        if not q1:
+            error = True
+        elif not q2:
+            error = True
+        else:
+            item = DailyProduction.objects.filter(date__range=(q1, q2))
+            # df = read_frame(item)
+            # df = read_frame(item, fieldnames=['date', 'quantity', 'catalogue', 'package', 'defect_worker'])
+            rows = ['date']
+            cols = ['catalogue']
+
+            pt = item.to_pivot_table(values='quantity', rows=rows, cols=cols, aggfunc=np.sum, fill_value=0, margins=True)
+            mydict = {
+                "df": pt.to_html(),
+                    }
+            return render(request, 'manufacture/pandas_report.html', mydict)
     return render(request, 'manufacture/search_month.html', {'error': error})

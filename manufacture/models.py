@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from django_pandas.managers import DataFrameManager
 
 
 class Sale(models.Model):
@@ -122,12 +123,15 @@ class DailyProduction(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания', )
     updated_date = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
+
+    objects = DataFrameManager()
+
     def fetch_package(self):
         self.package = self.quantity // 6
         return self.package
 
     def __str__(self):
-        return f'{self.date}, {self.catalogue}'
+        return f'{self.date}, {self.catalogue}, {self.quantity}'
 
     def defect_q(self):
         return self.defect_machine + self.defect_worker + self.defect_saya  # общее количество бракa

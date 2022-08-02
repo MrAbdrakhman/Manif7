@@ -48,7 +48,7 @@
 										<li>{{ item.catalogue__model }} {{item.catalogue__code}} {{ item.catalogue__color }} - {{item.quantity}} штук</li>
 										<script> sum({{item.quantity}});  </script>
 									{% endfor %}
-									Total: <h5 id="total-{{ forloop.counter }}"></h5><script> get_total({{ forloop.counter }});  </script>
+									<li> Total: <h5 id="total-{{ forloop.counter }}"></h5><script> get_total({{ forloop.counter }});  </script></li>
 								</ul>
 							</li>
 						{% endfor %}
@@ -59,6 +59,46 @@
 				</div> # 1
 			</div> # 2
  </div> # 3
+
+<!--<table class="iksweb">-->
+<!--	<tbody>-->
+<!--		<tr>-->
+<!--			<td rowspan="3">Модель</td>-->
+<!--			<td colspan="{{6}}">{{ date.grouper }} </td>-->
+<!--			<td colspan="5"></td>-->
+<!--		</tr>-->
+<!--		<tr>-->
+<!--			<td colspan="3">{{ production.catalogue.code }} </td>-->
+<!--			<td colspan="3"></td>-->
+<!--			<td colspan="3"></td>-->
+<!--			<td colspan="2"></td>-->
+<!--		</tr>-->
+<!--		<tr>-->
+<!--			<td>{{ production.catalogue.color }} </td>-->
+<!--			<td>{{ production.catalogue.color }} </td>-->
+<!--			<td>{{ production.catalogue.color }} </td>-->
+
+<!--		</tr>-->
+<!--		<tr>-->
+<!--			<td>1</td>-->
+<!--			<td></td>-->
+
+<!--		</tr>-->
+<!--		<tr>-->
+<!--			<td>2</td>-->
+
+<!--		</tr>-->
+<!--		<tr>-->
+<!--			<td>3</td>-->
+
+<!--			<td></td>-->
+<!--		</tr>-->
+<!--		<tr>-->
+<!--			<td>4</td>-->
+
+<!--		</tr>-->
+<!--	</tbody>-->
+<!--</table>-->
 <!--	<section class="ftco-section">-->
 <!--		<div class="container">-->
 <!--			<div class="row">-->
@@ -69,6 +109,7 @@
 
 
 <!--								<th >Название</th>-->
+<!--								{{ date.grouper }}-->
 <!--								{% for d in quantities %}-->
 
 <!--								<th >{{ d.catalogue }}</th>-->

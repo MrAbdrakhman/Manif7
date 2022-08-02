@@ -21,4 +21,5 @@ urlpatterns = [
     path('daily_timesheet2', view_daily_timesheet, name='daily_timesheet2'),
     path('search_month', search_monthly, name='search_month'),
     path('monthly_production2', search_monthly, name='monthly_production2'),
+    path('pandas_report', pandas_view, name='pandas_report'),
 ]

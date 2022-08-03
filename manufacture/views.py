@@ -216,11 +216,10 @@ def add_daily_timesheet(request):
     if request.method == 'POST':
         form = DailyTimesheetForm(request.POST)
         if form.is_valid():
-            try:
-                form.save()
+                instance = form.save(commit=False)
+                # instance.rate_day = instance.rate * instance.daily_prod_quant  # общее количество выработки одного сотрудника
+                instance.save()
                 return redirect('daily_timesheet2')
-            except:
-                form.add_error(None, "Что-то пошло не так, попробуйте снова")
         else:
             form = DailyTimesheetForm()
     else:
@@ -373,7 +372,7 @@ def pandas_view(request):
     return render(request, 'manufacture/search_month.html', {'error': error})
 
 # рассчет по ПУ
-def search(request):
+def search_pu(request):
     error = False
     if 'q1' and 'q2' in request.GET:
         q1 = datetime.datetime.strptime(request.GET['q1'], '%Y-%m-%d')
@@ -384,14 +383,14 @@ def search(request):
         elif not q2:
             error = True
         else:
-            quantities = DailyTimesheet.objects.filter(date__range=(q1, q2))
+            quantities = DailyTimesheet.objects.filter(date__range=(q1, q2), stanok='ПУ')
             #item = DailyProduction.objects.filter(date__range=(q1, q2))
             # df = read_frame(item)
             # df = read_frame(item, fieldnames=['date', 'quantity', 'catalogue', 'package', 'defect_worker'])
-            rows = ['employee']
-            cols = ['date', 'stanok']
+            rows = ['employee', 'rate']
+            cols = ['date']
 
-            pt = quantities.to_pivot_table(values=['daily_prod_quant'], rows=rows, cols=cols, aggfunc=np.sum, fill_value=0, margins=True)
+            pt = quantities.to_pivot_table(values=['daily_prod_quant', 'rate_day'], rows=rows, cols=cols, aggfunc=np.sum, fill_value=0, margins=True)
             mydict = {
                 "df": pt.to_html(),
                     }

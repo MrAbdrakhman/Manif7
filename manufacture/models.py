@@ -86,15 +86,14 @@ STATUSES = [
         ('ЭВА', 'ЭВА'),
     ]
 
+
 class DailyTimesheet(models.Model):
     date = models.DateField()
     employee = models.ForeignKey('Employee', on_delete=models.RESTRICT, )
     rate = models.IntegerField(default=0, verbose_name="Ставка за работу") #
     daily_prod_quant = models.IntegerField(default=0, verbose_name="Количество выработки за день") # Количество выработки работника на станке
-
+    rate_day = models.PositiveIntegerField(blank=True)
     stanok = models.CharField(max_length=40, blank=True, choices=STATUSES)
-
-    objects = models.Manager()
 
     objects = DataFrameManager()
 
@@ -106,12 +105,7 @@ class DailyTimesheet(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.date}'
-
-    def __str__(self):
         return f'{self.daily_prod_quant}'
-
-
 
     @property
     def emp_sum(self):
@@ -125,9 +119,10 @@ class DailyTimesheet(models.Model):
             return DailyTimesheet.objects.filter(date=self.date).count()
         return DailyTimesheet.objects.none()
 
-    def rate_day(self):
-        self.pac=self.rate + self.daily_prod_quant # общее количество выработки одного сотрудника
-        return self.pac
+    def save(self, *args, **kwargs):
+        self.rate_day = self.rate * self.daily_prod_quant
+        return super().save(*args, **kwargs)
+
 
 class DailyProduction(models.Model):
     date = models.DateField()

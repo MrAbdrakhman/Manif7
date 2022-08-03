@@ -53,6 +53,9 @@
 
 						      <th>Дата</th>
 						      <th>Сотрудник</th>
+								<th>Станок</th>
+								<th>Ставка за шт(обуви)</th>
+								<th>Выработка в день</th>
 						    </tr>
 						  </thead>
 						  <tbody>
@@ -60,11 +63,17 @@
 						    <tr>
 						      <th >{{ item.date }}</th>
 								<td>{{ item.employee }}</td>
+								<td>{{ item.stanok }}</td>
+								<td>{{ item.rate }}</td>
+								<td>{{ item.daily_prod_quant }}</td>
 						    </tr>
 						  {% endfor %}
 						  <tr>
 						      <th>ИТОГО за день</th>
 						      <td>{{ total_emp }}</td>
+							  <th></th>
+							  <th></th>
+							  <td>{{ total_prod }}</td>
 						  </tr>
 						  </tbody>
 						</table>

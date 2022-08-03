@@ -229,26 +229,26 @@ def add_daily_timesheet(request):
 
 
 # поиск по Эва
-def search(request):
-    error = False
-    if 'q1' and 'q2' in request.GET:
-        q1 = datetime.datetime.strptime(request.GET['q1'], '%Y-%m-%d')
-        q2 = datetime.datetime.strptime(request.GET['q2'], '%Y-%m-%d')
-
-        if not q1:
-            error = True
-        elif not q2:
-            error = True
-        else:
-            quantities = DailyProduction.objects.filter(date__range=(q1, q2))
-            emp = Employee.objects.all()
-            return render(request, 'manufacture/raschet_pu.html',
-                          {'quantities': quantities,
-                           'q1': q1,
-                           'q2': q2,
-                           'emp': emp}
-                          )
-    return render(request, 'manufacture/search_form.html', {'error': error})
+# def search(request):
+#     error = False
+#     if 'q1' and 'q2' in request.GET:
+#         q1 = datetime.datetime.strptime(request.GET['q1'], '%Y-%m-%d')
+#         q2 = datetime.datetime.strptime(request.GET['q2'], '%Y-%m-%d')
+#
+#         if not q1:
+#             error = True
+#         elif not q2:
+#             error = True
+#         else:
+#             quantities = DailyProduction.objects.filter(date__range=(q1, q2))
+#             emp = Employee.objects.all()
+#             return render(request, 'manufacture/raschet_pu.html',
+#                           {'quantities': quantities,
+#                            'q1': q1,
+#                            'q2': q2,
+#                            'emp': emp}
+#                           )
+#     return render(request, 'manufacture/search_form.html', {'error': error})
 
 
 # отображение ежедневного табеля
@@ -261,10 +261,12 @@ def view_daily_timesheet(request):
         else:
             timesheet = DailyTimesheet.objects.filter(date=q1)
             total_emp = DailyTimesheet.objects.filter(date=q1).count()
+            total_prod = DailyTimesheet.objects.filter(date=q1).aggregate(TOTAL=Sum('daily_prod_quant'))['TOTAL']
             context = {
                 'timesheet': timesheet,
                 'q1': q1,
                 'total_emp': total_emp,
+                'total_prod': total_prod,
             }
             return render(request, 'manufacture/daily_timesheet2.html', context)
 
@@ -369,3 +371,29 @@ def pandas_view(request):
                     }
             return render(request, 'manufacture/pandas_report.html', mydict)
     return render(request, 'manufacture/search_month.html', {'error': error})
+
+# рассчет по ПУ
+def search(request):
+    error = False
+    if 'q1' and 'q2' in request.GET:
+        q1 = datetime.datetime.strptime(request.GET['q1'], '%Y-%m-%d')
+        q2 = datetime.datetime.strptime(request.GET['q2'], '%Y-%m-%d')
+
+        if not q1:
+            error = True
+        elif not q2:
+            error = True
+        else:
+            quantities = DailyTimesheet.objects.filter(date__range=(q1, q2))
+            #item = DailyProduction.objects.filter(date__range=(q1, q2))
+            # df = read_frame(item)
+            # df = read_frame(item, fieldnames=['date', 'quantity', 'catalogue', 'package', 'defect_worker'])
+            rows = ['employee']
+            cols = ['date', 'stanok']
+
+            pt = quantities.to_pivot_table(values=['daily_prod_quant'], rows=rows, cols=cols, aggfunc=np.sum, fill_value=0, margins=True)
+            mydict = {
+                "df": pt.to_html(),
+                    }
+            return render(request, 'manufacture/raschet_pu.html', mydict)
+    return render(request, 'manufacture/search_form.html', {'error': error})

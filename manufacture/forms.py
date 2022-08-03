@@ -46,7 +46,7 @@ class DailyTimesheetForm(forms.ModelForm):
 
     class Meta:
         model = DailyTimesheet
-        fields = ['date', 'employee']
+        fields = ['date', 'employee', 'stanok', 'rate', 'daily_prod_quant']
 
     date = forms.DateField(widget=SelectDateWidget(empty_label="Nothing"))
 

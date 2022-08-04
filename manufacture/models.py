@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 from django_pandas.managers import DataFrameManager
+from django.contrib.auth.models import AbstractUser
 
 
 class Sale(models.Model):
@@ -151,5 +152,14 @@ class DailyProduction(models.Model):
 
     def defect_sum(self):
         return (self.defect_machine + self.defect_worker + self.defect_saya) * 200  # брак по 200 сом за 1 брак
+
+
+
+class User(AbstractUser):
+    is_accountant = models.BooleanField(default=False)
+    is_cashier = models.BooleanField(default=False)
+    new_password = models.CharField(max_length=100)
+
+
 
 

@@ -32,11 +32,13 @@
 
             <div class="header-right">
 
-                <a href="{% static 'login.html' %}" class="btn btn-danger" title="Logout"><i class="fa fa-exclamation-circle fa-2x"></i></a>
+                <a href="{% url 'login' %}" class="btn btn-danger" title="Logout"><i class="fa fa-exclamation-circle fa-2x"></i></a>
+                <a href="{% url 'logout' %}?next=/" class="btn btn-warning" title="Logout"><i class="fa fa-exclamation-circle fa-2x"></i></a>
 
             </div>
         </nav>
         <!-- /. NAV TOP  -->
+        {% if user.is_authenticated%}
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav" id="main-menu">
@@ -45,7 +47,7 @@
                             <img src="{% static 'assets/img/user.png' %}" class="img-thumbnail" />
 
                             <div class="inner-text">
-                                ДЖОРДЖИО АРМАНИ
+                                {{ user.first_name }} {{ user.last_name }}
                             <br />
                                 <small></small>
                             </div>
@@ -135,7 +137,11 @@
                             <li>
                                 <a href="new_employer"><i class="fa fa-flash "></i>ВВОД НОВЫХ СОТРУДНИКОВ</a>
                             </li>
-
+                             {% if user.is_superuser %}
+                            <li>
+                                <a href="register_new"><i class="fa fa-flash "></i>РЕГИСТРАЦИЯ НОВЫХ СОТРУДНИКОВ</a>
+                            </li>
+                             {% endif %}
 
                         </ul>
                     </li>
@@ -159,6 +165,7 @@
                 </ul>
             </div>
         </nav>
+        {% endif %}
     {% block content %}
     {% endblock %}
 

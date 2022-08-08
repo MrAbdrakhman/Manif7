@@ -3,7 +3,7 @@ from .views import *
 
 urlpatterns = [
     path('', index, name='index'),
-#    path('salary_total', salary_total, name='sales'),
+    path('sale_total', sale_total, name='sales'),
     path('new_sale', add_new_sale, name='new_sale'),
     path('emp_report', employers, name='employers'),
     path('new_employer', add_employer, name='new_employer'),

@@ -56,7 +56,7 @@ def edit_sale(request, id):
             edited_sale.price = request.POST.get("price")
             edited_sale.total = request.POST.get("total")
             edited_sale.save()
-            return redirect('salary_total')
+            return redirect('sale_total')
         else:
             return render(request, "manufacture/edit_sale.html", {"edited_sale": edited_sale})
     except Sale.DoesNotExist:
@@ -68,7 +68,7 @@ def delete_sale(request, id):
     try:
         deleted_sale = Sale.objects.get(id=id)
         deleted_sale.delete()
-        return redirect('salary_total')
+        return redirect('sale_total')
     except Sale.DoesNotExist:
         return HttpResponseNotFound("<h2>Продажа не найдена</h2>")
 
@@ -224,6 +224,7 @@ def add_daily_timesheet(request):
             form = DailyTimesheetForm()
     else:
         form = DailyTimesheetForm()
+
     return render(request, 'manufacture/new_daily_timesheet.html', {'form': form})
 
 

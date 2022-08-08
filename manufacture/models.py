@@ -42,7 +42,7 @@ class SalaryTotal(models.Model):  # общая зарплата
     employee = models.OneToOneField('Employee', on_delete=models.CASCADE, primary_key=True)
     #    occupation = models.ForeignKey('Occupation', null=True, blank=True, on_delete=models.CASCADE,
     #     related_name='salary_occupation')
-    sales = models.ForeignKey('Sale', on_delete=models.CASCADE, null=True, blank=True, related_name='salary_sales')
+    #sales = models.ForeignKey('Sale', on_delete=models.CASCADE, null=True, blank=True, related_name='salary_sales')
     # working_out = models.OneToOneField('Production', on_delete=models.CASCADE, null=True, blank=True)
     month = models.DateTimeField(auto_now=True)
     working_days = models.IntegerField(null=True)
@@ -53,6 +53,7 @@ class SalaryTotal(models.Model):  # общая зарплата
     firm_social_fund = models.DecimalField(max_digits=50, decimal_places=2, default=0)
     oklad_nachislen = models.IntegerField(null=True)
     viplata = models.IntegerField(null=True)
+
     objects = models.Manager()
 
     def __str__(self):

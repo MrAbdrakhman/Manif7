@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 from django_pandas.managers import DataFrameManager
+from django.contrib.auth.models import AbstractUser
 
 
 class Sale(models.Model):
@@ -95,7 +96,7 @@ STATUSES = [
 class DailyTimesheet(models.Model):
     date = models.DateField()
     employee = models.ForeignKey('Employee', on_delete=models.RESTRICT, )
-    rate = models.IntegerField(default=0, verbose_name="Ставка за работу") #
+    rate = models.IntegerField(default=0, verbose_name="Ставка за работу")
     daily_prod_quant = models.IntegerField(default=0, verbose_name="Количество выработки за день") # Количество выработки работника на станке
     rate_day = models.PositiveIntegerField(blank=True, verbose_name='Модель')
     stanok = models.CharField(max_length=40, blank=True, choices=STATUSES)
@@ -156,5 +157,14 @@ class DailyProduction(models.Model):
 
     def defect_sum(self):
         return (self.defect_machine + self.defect_worker + self.defect_saya) * 200  # брак по 200 сом за 1 брак
+
+
+
+class User(AbstractUser):
+    is_accountant = models.BooleanField(default=False)
+    is_cashier = models.BooleanField(default=False)
+    new_password = models.CharField(max_length=100)
+
+
 
 

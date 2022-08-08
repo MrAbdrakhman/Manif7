@@ -37,9 +37,9 @@ def index(request):
 
 
 # Продажи общие
-def salary_total(request):
+def sale_total(request):
     sales = Sale.objects.all().order_by('-pk')
-    return render(request, 'manufacture/salary_total.html', {'sales': sales})
+    return render(request, 'manufacture/sale_total.html', {'sales': sales})
 
 
 # Изменение значений в продажах
@@ -387,6 +387,7 @@ def search_pu(request):
             #item = DailyProduction.objects.filter(date__range=(q1, q2))
             # df = read_frame(item)
             # df = read_frame(item, fieldnames=['date', 'quantity', 'catalogue', 'package', 'defect_worker'])
+
             rows = ['employee', 'rate']
             cols = ['date']
 
@@ -396,3 +397,33 @@ def search_pu(request):
                     }
             return render(request, 'manufacture/raschet_pu.html', mydict)
     return render(request, 'manufacture/search_form.html', {'error': error})
+
+# поиск по станку ЭВА
+def search_eva(request):
+    error = False
+    if 'q1' and 'q2' in request.GET:
+        q1 = datetime.datetime.strptime(request.GET['q1'], '%Y-%m-%d')
+        q2 = datetime.datetime.strptime(request.GET['q2'], '%Y-%m-%d')
+
+        if not q1:
+            error = True
+        elif not q2:
+            error = True
+        else:
+            quantities = DailyTimesheet.objects.filter(date__range=(q1, q2), stanok='ЭВА')
+            rows = ['employee', 'rate']
+            cols = ['date']
+
+            pt = quantities.to_pivot_table(values=['daily_prod_quant', 'rate_day'], rows=rows, cols=cols, aggfunc=np.sum, fill_value=0, margins=True)
+            mydict = {
+                "df": pt.to_html(),
+                    }
+            return render(request, 'manufacture/raschet_eva.html', mydict)
+    return render(request, 'manufacture/search_form_eva.html', {'error': error})
+
+
+
+# общая зарплата
+def salary_total1(request):
+    salary_t = SalaryTotal.objects.all().order_by('-pk')
+    return render(request, 'manufacture/salary_total1.html', {'salary_t': salary_t})

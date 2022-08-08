@@ -71,6 +71,10 @@ class Employee(models.Model):
     def __str__(self):
         return f'{self.fio}'
 
+    class Meta:
+        verbose_name = 'Сотрудник'
+        verbose_name_plural = 'Сотрудники'
+
 
 class Client(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
@@ -92,7 +96,7 @@ class DailyTimesheet(models.Model):
     employee = models.ForeignKey('Employee', on_delete=models.RESTRICT, )
     rate = models.IntegerField(default=0, verbose_name="Ставка за работу") #
     daily_prod_quant = models.IntegerField(default=0, verbose_name="Количество выработки за день") # Количество выработки работника на станке
-    rate_day = models.PositiveIntegerField(blank=True)
+    rate_day = models.PositiveIntegerField(blank=True, verbose_name='Модель')
     stanok = models.CharField(max_length=40, blank=True, choices=STATUSES)
 
     objects = DataFrameManager()
